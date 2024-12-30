@@ -3,6 +3,11 @@ import pandas as pd
 import plotly.express as px
 
 # Title and Introduction
+st.set_page_config(
+    page_title="World GDP Insights",
+    page_icon="🌍",
+    layout="wide"
+)
 st.title("World GDP per Capita Visualization")
 st.markdown("""
 This interactive application visualizes the global GDP per capita for selected years.
@@ -33,18 +38,19 @@ for year in year_columns:
     merged_df[year] = pd.to_numeric(merged_df[year], errors='coerce')
 
 # Add your name to the sidebar
-st.sidebar.markdown("**Created by: Muhammad Farhan Audianto**")
+st.sidebar.markdown("**Created by:** Muhammad Farhan Audianto")
+st.sidebar.markdown("**Data Source:** [World Bank](https://data.worldbank.org/)")
 
 # Sidebar filters
 st.sidebar.header("Filters")
 
 # IncomeGroup dropdown
 income_groups = ["All"] + sorted(merged_df['IncomeGroup'].dropna().unique().tolist())
-selected_income_group = st.sidebar.selectbox("Select Income Group", income_groups)
+selected_income_group = st.sidebar.selectbox("Select Income Group", income_groups,help="Filter the data by income group (e.g., Low Income, High Income).")
 
 # Region dropdown
 regions = ["All"] + sorted(merged_df['Region'].dropna().unique().tolist())
-selected_region = st.sidebar.selectbox("Select Region", regions)
+selected_region = st.sidebar.selectbox("Select Region", regions,help="Filter the data by region (e.g., South Asia, Europe).")
 
 # Slider to select year (moved to the sidebar)
 selected_year = st.sidebar.slider("Select a year for visualization:", 1960, 2023, 2023)
@@ -113,7 +119,10 @@ st.subheader(f"Country Distribution by Income Group in {selected_year}")
 income_group_distribution = filtered_df_sidebar.groupby('IncomeGroup')[str(selected_year)].count().reset_index()
 income_group_distribution.columns = ['Income Group', 'Number of Countries']
 
-# Plot the bar chart
+# Set a consistent color theme for charts
+color_theme = px.colors.sequential.Viridis
+
+# Use the theme in the bar chart
 fig_bar = px.bar(
     income_group_distribution,
     x='Income Group',
@@ -121,9 +130,10 @@ fig_bar = px.bar(
     title=f"Number of Countries by Income Group ({selected_year})",
     labels={'Number of Countries': 'Number of Countries'},
     color='Income Group',
-    text='Number of Countries'  # Display the count on the bars
+    text='Number of Countries',
+    color_discrete_sequence=color_theme
 )
-fig_bar.update_layout(showlegend=False, xaxis_title="Income Group", yaxis_title="Number of Countries")
+
 
 # Display the bar chart
 st.plotly_chart(fig_bar, use_container_width=True)
