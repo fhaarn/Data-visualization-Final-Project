@@ -12,6 +12,7 @@ st.title("World GDP per Capita Visualization")
 st.markdown("""
 This interactive application visualizes the global GDP per capita for selected years.
 Darker colors indicate higher GDP values. Data is enriched with income group and region information.
+The data is in US$ in 16 December.
 """)
 
 # File paths
@@ -39,7 +40,7 @@ for year in year_columns:
 
 # Add your name to the sidebar
 st.sidebar.markdown("**Created by:** Muhammad Farhan Audianto")
-st.sidebar.markdown("**Data Source:** [World Bank](https://data.worldbank.org/)")
+st.sidebar.markdown("**Data Source:** [World Bank](https://data.worldbank.org/indicator/NY.GDP.PCAP.CD)")
 
 # Sidebar filters
 st.sidebar.header("Filters")
@@ -68,7 +69,7 @@ if selected_region != "All":
 if st.checkbox("Show Dataset"):
     filtered_columns = ['Country Name'] + [str(year) for year in range(1960, 2024)]  # Include years 1960 to 2023
     filtered_df = filtered_df_sidebar[filtered_columns]
-    st.write("Dataset (GDP per capita (current US$))", filtered_df)
+    st.write("Dataset (GDP per capita)", filtered_df)
 
 # Choropleth Map
 st.subheader(f"World Map of GDP per Capita ({selected_year})")
